@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Web EMail</title>
+   <script src="Scripts/jquery-2.0.3.js"></script>
+   <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css"/>
+   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <style>
+        input, select, textarea, button
+        {
+            font-family:inherit;
+            font-size:inherit;
+        }
+		
+        .inputWidth {
+            width: 300px;
+            color: black;
+        }        
+		
+	</style>
+</head>
+<body>
+<form id="form1">
+        <div>
+        <h2 style="margin-bottom: 5px; margin-top: 20px; text-decoration: underline;">Mail Details</h2>
+        <table style="width:100%; line-height: normal;">
+            <tr>
+                <td style="width:10%;">Subject:</td>
+                <td>
+                    <input type="text" id="TextBoxSubject" class="inputWidth" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width:10%;">To:</td>
+                <td>
+                    <input type="text" id="TextBoxMailTo" class="inputWidth" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width:10%;">CC:</td>
+                <td>
+                    <input type="text" id="TextBoxMailCC" class="inputWidth" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width:10%;">BCC:</td>
+                <td>
+                    <input type="text" id="TextBoxMailBCC" class="inputWidth" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width:10%;">Contents:</td>
+                <td style="width:70%;">
+                    <textarea name="TextBoxContents" id="TextBoxContents" rows="4" style="width:90%;"></textarea>
+                </td>
+            </tr>
+        </table>
+        </div>
+        <br />
+        <div>
+		    <input type="button" id="SubmitButton" name="SubmitButton" value="Send Mail"/>
+        </div>
+        <br /><br />
+        <div>
+			<span id="textMessage" style="color:red;"> </span>
+        </div>
+		
+</form>
+</body>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+		
+    });
+
+    $(document).on('click', '#SubmitButton', function () {
+		$("#textMessage").text("Sending mail ...");
+		submitEmail();
+	});
+	
+    function submitEmail() {
+
+		var EmailItem = new Object();
+		EmailItem.ID = 1;
+		EmailItem.Subject = $('#TextBoxSubject').val();
+		EmailItem.EmailTo = $('#TextBoxMailTo').val(); 
+		EmailItem.EmailCC = $('#TextBoxMailCC').val(); 
+		EmailItem.EmailBCC = $('#TextBoxMailBCC').val(); 
+		EmailItem.Contents = $('#TextBoxContents').val(); 
+
+        var target = "/api/EmailItems";
+		
+        $.ajax(
+        {
+            type: "POST",
+            url: target,
+			data : EmailItem,
+            dataType: "json",
+            success: function (data) {
+				$("#textMessage").text(data);
+            },
+			
+            error: function () {
+                $("#textMessage").text("Failed to send email");
+            }
+			
+        });
+
+
+    }
+
+
+</script>
+</html>
